@@ -15,6 +15,7 @@ public class Main {
             System.out.println("Server started at: " + new Date() + '\n');
 
             Socket socket = server.accept();
+            System.out.println("Connected to client");
 
             InputStream input = socket.getInputStream(); //Received from the client
             OutputStream output = socket.getOutputStream(); //Send to the client
