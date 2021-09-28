@@ -1,17 +1,31 @@
 package com.company;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.*;
 
 public class Main {
-    int port = 6969;
+    static int port = 6969;
 
     public static void main(String[] args) {
-        DataInputStream in;
-        DataOutputStream out;
-        ServerSocket server;
-        Socket socket;
+
+        try {
+            ServerSocket server = new ServerSocket(port);
+            System.out.println("Server started at: " + new Date() + '\n');
+
+            Socket socket = server.accept();
+
+            InputStream input = socket.getInputStream(); //Received from the client
+            OutputStream output = socket.getOutputStream(); //Send to the client
+
+            //DATA INPUT/OUTPUT
+            //DataInputStream input = new DataInputStream(socket.getInputStream());
+            //DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Server Socket fail!");
+        }
     }
 }
