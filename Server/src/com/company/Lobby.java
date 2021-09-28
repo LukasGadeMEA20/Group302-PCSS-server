@@ -8,19 +8,19 @@ public class Lobby {
     boolean allReady;
     int winPoint;
 
-    private void settingsChanged(){
+    public void settingsChanged(){
 
     }
 
-    private void startGame(){
+    public void startGame(){
 
     }
 
-    private void setPromt(){
+    public void setPromt(){
 
     }
 
-    private void userWrittenIn(){
+    public void userWrittenIn(){
 
     }
 }
