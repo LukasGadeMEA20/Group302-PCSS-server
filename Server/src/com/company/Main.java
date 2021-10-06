@@ -1,32 +1,42 @@
 package com.company;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.Date;
 
 public class Main {
-    static int port = 0302;
+    static int port = 302;
 
     public static void main(String[] args) {
 
-        try {
-            ServerSocket server = new ServerSocket(port);
-            System.out.println("Server started at: " + new Date() + '\n');
+        new Thread( () ->{
+            try{
+                ServerSocket serverSocket = new ServerSocket(12345);
+                System.out.println("Server started at " + new Date() + '\n');
 
-            Socket socket = server.accept();
-            System.out.println("Connected to client");
+                ServerUser[] listOfUsers = new ServerUser[8];
+                int clientNo = 0;
+                while(true) {
+                    Socket connectToClient = serverSocket.accept();
+                    int thisUserNumber = clientNo;
+                    clientNo++;
 
-            InputStream input = socket.getInputStream(); //Received from the client
-            OutputStream output = socket.getOutputStream(); //Send to the client
+                    System.out.println("Starting thread for client " + clientNo + " at " + new Date()+'\n');
+                    InetAddress inetAddress = connectToClient.getInetAddress();
+                    System.out.println("Client " + clientNo + "'s host name is " + inetAddress.getHostName() + '\n');
+                    System.out.println("Client " + clientNo + "'s host address is " + inetAddress.getHostAddress() + '\n');
+                    new Thread(
+                            new WorkerRunnable(connectToClient, "Multithreadded server", inetAddress.getHostName())
+                    ).start();
 
-            //DATA INPUT/OUTPUT
-            //DataInputStream input = new DataInputStream(socket.getInputStream());
-            //DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Server Socket fail!");
-        }
+                    DataInputStream fromFile = new DataInputStream(new FileInputStream(inetAddress.getHostName()+".txt"));
+                    listOfUsers[thisUserNumber] = new ServerUser(fromFile.readUTF());
+                }
+            } catch (IOException e){
+                System.err.println(e);
+            }
+        }).start();
     }
 }

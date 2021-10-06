@@ -1,8 +1,8 @@
 package com.company;
 
 public class Lobby {
-    User[] listOfUsers;
-    User cardAdmin;
+    ServerUser[] listOfServerUsers;
+    ServerUser cardAdmin;
     float time;
     Promt promt;
     boolean allReady;

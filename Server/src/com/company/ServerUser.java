@@ -1,12 +1,20 @@
 package com.company;
 
-public class User {
+public class ServerUser {
     String userName;
     int points;
     boolean inLobby;
     boolean afk;
     float afkTimer;
     boolean ready;
+
+    ServerUser(){
+        userName = "";
+    }
+
+    ServerUser(String _userName){
+        userName = _userName;
+    }
 
     public void setUserName(String userName) { //sets the username of a user
         this.userName = userName;
