@@ -18,8 +18,13 @@ public class Main {
                 System.out.println("Server started at " + new Date() + '\n');
 
                 //Create a new prompt and run the choosePrompt function
-                Prompt chosenPrompt = new Prompt();
-                chosenPrompt.choosePrompt();
+                //Prompt chosenPrompt = new Prompt();
+                //chosenPrompt.choosePrompt();
+
+                //Read the promptsFile.txt file and runs the readFile function
+                Prompt readPrompt = new Prompt();
+                readPrompt.readFile();
+                readPrompt.choosePrompt();
 
                 ArrayList<ServerUser> listOfUsers= new ArrayList<ServerUser>();
                 //ServerUser[] listOfUsers = new ServerUser[]{new ServerUser("blank")};
