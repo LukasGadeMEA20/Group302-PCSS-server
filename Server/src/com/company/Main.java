@@ -36,6 +36,8 @@ public class Main {
                     DataInputStream fromFile = new DataInputStream(new FileInputStream(inetAddress.getHostAddress()+".txt"));
                     listOfUsers.add(new ServerUser(fromFile.readUTF()));
                     System.out.println(thisUserNumber);
+
+                    System.out.print(User.choosePromt);
                 }
             } catch (IOException e){
                 System.err.println(e);
