@@ -17,6 +17,10 @@ public class Main {
                 ServerSocket serverSocket = new ServerSocket(12345);
                 System.out.println("Server started at " + new Date() + '\n');
 
+                //Create a new prompt and run the choosePrompt function
+                Prompt chosenPrompt = new Prompt();
+                chosenPrompt.choosePrompt();
+
                 ArrayList<ServerUser> listOfUsers= new ArrayList<ServerUser>();
                 //ServerUser[] listOfUsers = new ServerUser[]{new ServerUser("blank")};
                 int clientNo = 0;
@@ -29,6 +33,7 @@ public class Main {
                     InetAddress inetAddress = connectToClient.getInetAddress();
                     System.out.println("Client " + clientNo + "'s host name is " + inetAddress.getHostName() + '\n');
                     System.out.println("Client " + clientNo + "'s host address is " + inetAddress.getHostAddress() + '\n');
+
                     new Thread(
                             new WorkerRunnable(connectToClient, "Multithreadded server", inetAddress.getHostAddress())
                     ).start();
@@ -37,7 +42,6 @@ public class Main {
                     listOfUsers.add(new ServerUser(fromFile.readUTF()));
                     System.out.println(thisUserNumber);
 
-                    System.out.print(User.choosePromt);
                 }
             } catch (IOException e){
                 System.err.println(e);

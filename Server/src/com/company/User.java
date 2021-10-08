@@ -57,7 +57,7 @@ public class User {
     public void choosePrompt() {
         int randomNum = random.nextInt(prompts.length);
         randomPrompt = prompts[randomNum].toString();
-        //System.out.println(prompts[randomPrompt].toString());
+        System.out.println(randomPrompt);
 
     }
 }

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="54ceb8f1-bbbf-446d-ac29-8954d143a7d4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Server/src/com/company/Prompt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/com/company/Lobby.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/com/company/Lobby.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/src/com/company/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/com/company/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/com/company/Promt.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/com/company/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/com/company/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Group302-PCSS-server/com/company/Lobby.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Group302-PCSS-server/com/company/Lobby.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Group302-PCSS-server/com/company/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Group302-PCSS-server/com/company/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Group302-PCSS-server/com/company/Promt.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,5 +70,16 @@
       <updated>1633519338863</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
