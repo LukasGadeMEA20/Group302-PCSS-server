@@ -5,10 +5,10 @@ import java.util.Collections;
 
 public class SelectUser {
     //ArrayList of users joined
-    ArrayList<String> listOfJoinedUsers = new ArrayList<>();
+    ArrayList<ServerUser> listOfJoinedUsers = new ArrayList<>();
 
     //Scrambles the list of users into a random order
-    public void scramblePlayers(ArrayList<String> listOfJoinedUsers){
+    public void scramblePlayers(ArrayList<ServerUser> listOfJoinedUsers){
         Collections.shuffle(listOfJoinedUsers);
     }
 
@@ -16,7 +16,7 @@ public class SelectUser {
     public void switchToLast(){
 
         //Finds the first element in the index
-        String firstIndex = listOfJoinedUsers.get(0);
+        ServerUser firstIndex = listOfJoinedUsers.get(0);
 
         //Removes the element
         listOfJoinedUsers.remove(firstIndex);

@@ -29,20 +29,31 @@ public class Main {
 
                 //Scramble the joined users & move the first user to the last
                 SelectUser joinedUsers = new SelectUser();
-                joinedUsers.listOfJoinedUsers.add("User 1");
-                joinedUsers.listOfJoinedUsers.add("User 2");
-                joinedUsers.listOfJoinedUsers.add("User 3");
-                joinedUsers.listOfJoinedUsers.add("User 4");
+                ServerUser user1 = new ServerUser();user1.setUserName("Brian");
+                ServerUser user2 = new ServerUser();user2.setUserName("Klaus");
+                ServerUser user3 = new ServerUser();user3.setUserName("Dart Monkey");
 
-                System.out.println("Unscrambled: " + joinedUsers.listOfJoinedUsers);
+                joinedUsers.listOfJoinedUsers.add(user1);
+                joinedUsers.listOfJoinedUsers.add(user2);
+                joinedUsers.listOfJoinedUsers.add(user3);
+
+                //joinedUsers.listOfJoinedUsers.add(new ServerUser());
+
+                for (int i = 0; i < joinedUsers.listOfJoinedUsers.size(); i++){
+                    System.out.println("Unscrambled: " + joinedUsers.listOfJoinedUsers.get(i).getUserName());
+                }
 
                 //Scramble users
                 joinedUsers.scramblePlayers(joinedUsers.listOfJoinedUsers);
-                System.out.println("Scrambled: " + joinedUsers.listOfJoinedUsers);
+                for (int i = 0; i < joinedUsers.listOfJoinedUsers.size(); i++){
+                    System.out.println("Scrambled: " + joinedUsers.listOfJoinedUsers.get(i).getUserName());
+                }
 
                 //Sets the current first user to last
                 joinedUsers.switchToLast();
-                System.out.println("Switched to last: " + joinedUsers.listOfJoinedUsers);
+                for (int i = 0; i < joinedUsers.listOfJoinedUsers.size(); i++){
+                    System.out.println("Switched to last: " + joinedUsers.listOfJoinedUsers.get(i).getUserName());
+                }
 
                 ArrayList<ServerUser> listOfUsers= new ArrayList<ServerUser>();
                 //ServerUser[] listOfUsers = new ServerUser[]{new ServerUser("blank")};
