@@ -35,10 +35,12 @@ public class Main {
                 joinedUsers.listOfJoinedUsers.add("User 4");
 
                 System.out.println("Unscrambled: " + joinedUsers.listOfJoinedUsers);
+
                 //Scramble users
                 joinedUsers.scramblePlayers(joinedUsers.listOfJoinedUsers);
                 System.out.println("Scrambled: " + joinedUsers.listOfJoinedUsers);
 
+                //Sets the current first user to last
                 joinedUsers.switchToLast();
                 System.out.println("Switched to last: " + joinedUsers.listOfJoinedUsers);
 
