@@ -6,13 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class LobbyCreateRunnable implements Runnable{
+public class LobbyRunnable implements Runnable{
     Socket connectToClient = null;
     String name = "";
     String id = "";
     ServerPrompt prompt;
 
-    LobbyCreateRunnable(Socket _connectToClient, String _name, String _id, ServerPrompt _prompt){
+    LobbyRunnable(Socket _connectToClient, String _name, String _id, ServerPrompt _prompt){
         connectToClient = _connectToClient;
         name = _name;
         id = _id;

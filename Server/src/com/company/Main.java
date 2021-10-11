@@ -42,6 +42,7 @@ public class Main {
                     new Thread(
                             new WorkerRunnable(connectToClient, "Multithreadded server", inetAddress.getHostAddress())
                     ).start();
+
                     Thread.sleep(5000);
                     DataInputStream fromFile = new DataInputStream(new FileInputStream(inetAddress.getHostAddress()+".txt"));
                     listOfUsers.add(new ServerUser(fromFile.readUTF()));

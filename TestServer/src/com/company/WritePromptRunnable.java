@@ -7,16 +7,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
 
-public class WorkerRunnable implements Runnable{
+public class WritePromptRunnable implements Runnable{
     Socket connectToClient = null;
     String name = "";
-    String id = "";
+    ServerUser user;
     ServerPrompt prompt;
 
-    WorkerRunnable(Socket _connectToClient, String _name, String _id, ServerPrompt _prompt){
+    WritePromptRunnable(Socket _connectToClient, String _name, ServerUser _user, ServerPrompt _prompt){
         connectToClient = _connectToClient;
         name = _name;
-        id = _id;
+        user = _user;
         prompt = _prompt;
     }
 
@@ -29,19 +29,20 @@ public class WorkerRunnable implements Runnable{
             DataInputStream fromClient = new DataInputStream(connectToClient.getInputStream());
             DataOutputStream toClient = new DataOutputStream(connectToClient.getOutputStream());
 
-            DataOutputStream toFile = new DataOutputStream(new FileOutputStream(id+".txt"));
+            DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
 
             while(connected){
                 toClient.writeUTF(prompt.getPrompt());
                 String userAnswer = fromClient.readUTF();
-                prompt.addUserAnswer(new UserAnswer(new ServerUser("test") , userAnswer));
-                System.out.println(prompt.getUserAnswerAtPoint(0).getUserAnswer());
+                prompt.addUserAnswer(new UserAnswer(user, userAnswer));
+                toClient.writeUTF(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
+                //System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
                 Thread.sleep(10000);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e){
-
+            e.printStackTrace();
         }
     }
 }

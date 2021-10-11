@@ -15,4 +15,17 @@ public class ServerUser {
         userID = _id;
         ipName = _ipName;
     }
+    public String getUserName(){
+        return userName;
+    }
+
+    public int getUserID(){
+        return userID;
+    }
+
+    public String getIpName(){
+        return ipName;
+    }
+
+
 }

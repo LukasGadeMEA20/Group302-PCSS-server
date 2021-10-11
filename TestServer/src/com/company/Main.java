@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Main {
@@ -18,8 +17,9 @@ public class Main {
                 System.out.println("Server started at " + new Date() + '\n');
                 int clientNo = 0;
 
+                GameFlow game = new GameFlow();
                 ServerPrompt prompt = new ServerPrompt();
-                int state = 0;
+                int state = 1;
                 boolean acceptingUsers = true;
 
                 while(true) {
@@ -32,16 +32,23 @@ public class Main {
                     System.out.println("Client " + clientNo + "'s host name is " + inetAddress.getHostName() + '\n');
                     System.out.println("Client " + clientNo + "'s host address is " + inetAddress.getHostAddress() + '\n');
 
-                    switch(state){
-                        case 0:
-
-                    }
-
                     ServerUser currentUser = new ServerUser(thisUserNumber, inetAddress.getHostName());
 
-                    new Thread(
-                            new WorkerRunnable(connectToClient, "Multithreaded server", inetAddress.getHostName(), prompt)
-                    ).start();
+                    switch(state){
+                        case 0:
+                            break;
+                        case 1:
+                            if(thisUserNumber == 0){
+                                game.cardCzarFlow();
+                            } else {
+                                game.otherPlayersFlow(connectToClient, "Multithreadded server", currentUser, prompt);
+                            }
+                            break;
+                    }
+
+
+
+
                     Thread.sleep(3000);
                     //System.out.println(prompt.getUserAnswerAtPoint(thisUserNumber).getUserAnswer());
                 }
@@ -51,5 +58,9 @@ public class Main {
                 System.err.println(e);
             }
         }).start();
+    }
+
+    public static void reset(){
+
     }
 }
