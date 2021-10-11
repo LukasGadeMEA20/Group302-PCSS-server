@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -26,9 +27,25 @@ public class Main {
                 readPrompt.readFile();
                 readPrompt.choosePrompt();
 
+                //Scramble the joined users & move the first user to the last
+                SelectUser joinedUsers = new SelectUser();
+                joinedUsers.listOfJoinedUsers.add("User 1");
+                joinedUsers.listOfJoinedUsers.add("User 2");
+                joinedUsers.listOfJoinedUsers.add("User 3");
+                joinedUsers.listOfJoinedUsers.add("User 4");
+
+                System.out.println("Unscrambled: " + joinedUsers.listOfJoinedUsers);
+                //Scramble users
+                joinedUsers.scramblePlayers(joinedUsers.listOfJoinedUsers);
+                System.out.println("Scrambled: " + joinedUsers.listOfJoinedUsers);
+
+                joinedUsers.switchToLast();
+                System.out.println("Switched to last: " + joinedUsers.listOfJoinedUsers);
+
                 ArrayList<ServerUser> listOfUsers= new ArrayList<ServerUser>();
                 //ServerUser[] listOfUsers = new ServerUser[]{new ServerUser("blank")};
                 int clientNo = 0;
+
                 while(true) {
                     Socket connectToClient = serverSocket.accept();
                     int thisUserNumber = clientNo;
