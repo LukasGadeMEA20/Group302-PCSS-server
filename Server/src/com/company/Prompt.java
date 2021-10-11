@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 public class Prompt {
     String[] answer;
+
+    //String containing the random selected prompt
     String randomPrompt;
 
     //ArrayList containing all the prompts from the promptsFile
