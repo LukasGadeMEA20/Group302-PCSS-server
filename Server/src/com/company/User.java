@@ -29,7 +29,7 @@ public class User {
         this.userName = userName;
     }
 
-    public String getUserName() { //gets the assigned username from the user object
+    public String getUserName(String userName) { //gets the assigned username from the user object
         return this.userName;
     }
 
