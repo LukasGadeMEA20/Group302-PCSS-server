@@ -38,15 +38,16 @@ public class Main {
                         case 0:
                             break;
                         case 1:
-                            if(thisUserNumber == 0){
-                                game.cardCzarFlow();
-                            } else {
-                                game.otherPlayersFlow(connectToClient, "Multithreadded server", currentUser, prompt);
+                            boolean gameRun = true;
+                            while(gameRun) {
+                                if (thisUserNumber == 0) {
+                                    game.cardCzarFlow();
+                                } else {
+                                    game.otherPlayersFlow(connectToClient, currentUser.getIpName()+" thread", currentUser, prompt);
+                                }
                             }
                             break;
                     }
-
-
 
 
                     Thread.sleep(3000);

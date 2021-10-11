@@ -37,11 +37,8 @@ public class WritePromptRunnable implements Runnable{
                 prompt.addUserAnswer(new UserAnswer(user, userAnswer));
                 toClient.writeUTF(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
                 //System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
-                Thread.sleep(10000);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e){
             e.printStackTrace();
         }
     }
