@@ -24,4 +24,6 @@ public class SelectUser {
         //Adds the element back, so it is last
         listOfJoinedUsers.add(firstIndex);
     }
+
+    // FUCK DIG DANIEL
 }
