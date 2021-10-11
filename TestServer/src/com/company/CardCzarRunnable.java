@@ -8,13 +8,13 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-public class WritePromptRunnable implements Runnable{
+public class CardCzarRunnable implements Runnable{
     Socket connectToClient = null;
     String name = "";
     ServerUser user;
     ServerPrompt prompt;
 
-    WritePromptRunnable(Socket _connectToClient, String _name, ServerUser _user, ServerPrompt _prompt){
+    CardCzarRunnable(Socket _connectToClient, String _name, ServerUser _user, ServerPrompt _prompt){
         connectToClient = _connectToClient;
         name = _name;
         user = _user;
@@ -34,12 +34,22 @@ public class WritePromptRunnable implements Runnable{
 
             while(connected){
                 toClient.writeUTF(prompt.getPrompt());
+                if(prompt.allReady) {
+                    toClient.writeUTF("Please choose the prompt you like the most:");
+                    String promptsToPrint = "";
+                    for(int i = 0; i < prompt.getUserAnswers().size(); i++){
+                        promptsToPrint += i + " - " + prompt.getUserAnswerAtPoint(i).getUserAnswer()+'\n';
+                    }
+                    toClient.writeUTF(promptsToPrint);
+                } else {
+                    Thread.sleep(2000);
+                }
                 String userAnswer = fromClient.readUTF();
                 prompt.addUserAnswer(new UserAnswer(user, userAnswer));
                 toClient.writeUTF(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
                 System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

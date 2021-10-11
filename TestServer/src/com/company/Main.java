@@ -39,13 +39,12 @@ public class Main {
                             break;
                         case 1:
                             boolean gameRun = true;
-                            while(gameRun) {
-                                if (thisUserNumber == 0) {
+                            // while(gameRun) {
+                                if (thisUserNumber < 0) {
                                     game.cardCzarFlow();
                                 } else {
                                     game.otherPlayersFlow(connectToClient, currentUser.getIpName()+" thread", currentUser, prompt);
                                 }
-                            }
                             break;
                     }
 
