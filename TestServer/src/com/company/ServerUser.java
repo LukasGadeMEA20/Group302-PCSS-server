@@ -19,6 +19,10 @@ public class ServerUser {
         return userName;
     }
 
+    public void setUserName(String _userName){
+        userName = _userName;
+    }
+
     public int getUserID(){
         return userID;
     }
@@ -26,6 +30,4 @@ public class ServerUser {
     public String getIpName(){
         return ipName;
     }
-
-
 }
