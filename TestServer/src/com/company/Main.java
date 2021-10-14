@@ -21,6 +21,7 @@ public class Main {
                 ServerPrompt prompt = new ServerPrompt();
                 int state = 1;
                 boolean acceptingUsers = true;
+                PlayerQueue<ServerUser> playerQueue = new PlayerQueue<>();
 
                 while(true) {
                     Socket connectToClient = serverSocket.accept();
@@ -33,19 +34,45 @@ public class Main {
                     System.out.println("Client " + clientNo + "'s host address is " + inetAddress.getHostAddress() + '\n');
 
                     ServerUser currentUser = new ServerUser(thisUserNumber, inetAddress.getHostName());
+                    playerQueue.queue(currentUser);
 
-                    switch(state){
-                        case 0:
-                            break;
-                        case 1:
-                            boolean gameRun = true;
-                            // while(gameRun) {
-                                if (thisUserNumber < 0) {
-                                    game.cardCzarFlow();
-                                } else {
-                                    game.otherPlayersFlow(connectToClient, currentUser.getIpName()+" thread", currentUser, prompt);
+                    // Check if the lobby is still running.
+                    boolean lobbyRunning = true;
+                    while(lobbyRunning) {
+                        switch (state) {
+                            case 0:
+                                break;
+                            case 1:
+                                prompt.setNumberOfUsers(clientNo);
+                                // Check if the game is still going.
+                                boolean gameRunning = true;
+                                while (gameRunning) {
+                                    // Change to running the cardCzarFlow for first user in the player queue
+                                    // then a for loop for the other players. Much better and does not require using the user number counter.
+                                    if (thisUserNumber == 0) { // change to take the first user in the queue
+                                        // run the cardCzars perspective.
+                                        game.cardCzarFlow(connectToClient, currentUser.getIpName() + " thread", currentUser, prompt);
+                                    } else {
+                                        // run the other players' perspective.
+                                        game.otherPlayersFlow(connectToClient, currentUser.getIpName() + " thread", currentUser, prompt);
+                                    }
+
+                                    // Check if the round is still going
+                                    boolean roundRunning = true;
+                                    while(roundRunning) {
+                                        if (game.nextRound()) {
+                                            // switch around queue.
+                                        } else if (game.gameFinished()) {
+                                            // go to end screen.
+                                            state = 2;
+                                            gameRunning = false;
+                                        }
+                                    }
                                 }
-                            break;
+                                break;
+                            case 2:
+                                break;
+                        }
                     }
 
 

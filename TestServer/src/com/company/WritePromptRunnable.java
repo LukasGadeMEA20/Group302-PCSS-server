@@ -34,8 +34,9 @@ public class WritePromptRunnable implements Runnable{
 
             while(connected){
                 toClient.writeUTF(prompt.getPrompt());
+                toClient.writeBoolean(true);
                 String userAnswer = fromClient.readUTF();
-                prompt.addUserAnswer(new UserAnswer(user, userAnswer));
+                prompt.addUserAnswer(new UserAnswer(user, userAnswer, true));
                 toClient.writeUTF(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
                 System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
             }

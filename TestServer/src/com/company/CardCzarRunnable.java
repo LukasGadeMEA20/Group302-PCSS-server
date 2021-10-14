@@ -34,20 +34,24 @@ public class CardCzarRunnable implements Runnable{
 
             while(connected){
                 toClient.writeUTF(prompt.getPrompt());
-                if(prompt.allReady) {
+                prompt.checkAllReady();
+                if(prompt.getAllReady()) {
                     toClient.writeUTF("Please choose the prompt you like the most:");
                     String promptsToPrint = "";
                     for(int i = 0; i < prompt.getUserAnswers().size(); i++){
                         promptsToPrint += i + " - " + prompt.getUserAnswerAtPoint(i).getUserAnswer()+'\n';
                     }
                     toClient.writeUTF(promptsToPrint);
+                    toClient.writeBoolean(true);
+                    String userAnswer = fromClient.readUTF();
+                    // take user choice here.
                 } else {
                     Thread.sleep(2000);
                 }
-                String userAnswer = fromClient.readUTF();
+                /*String userAnswer = fromClient.readUTF();
                 prompt.addUserAnswer(new UserAnswer(user, userAnswer));
                 toClient.writeUTF(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
-                System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
+                System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());*/
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

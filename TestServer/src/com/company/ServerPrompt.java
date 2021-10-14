@@ -6,6 +6,7 @@ public class ServerPrompt {
     String prompt = "";
     ArrayList<UserAnswer> userAnswers = new ArrayList<UserAnswer>();
     boolean allReady = false;
+    int numberOfUsers = 0;
 
     ServerPrompt(){
         prompt = generatePrompt();
@@ -20,6 +21,10 @@ public class ServerPrompt {
 
     public void setPrompt(String _prompt){
         prompt = _prompt;
+    }
+
+    public void setNumberOfUsers(int _users){
+        numberOfUsers = _users;
     }
 
     public void addUserAnswer(UserAnswer _userAnswer){
@@ -47,6 +52,10 @@ public class ServerPrompt {
     }
 
     public void checkAllReady(){
-
+        if(numberOfUsers > userAnswers.size()){
+            allReady = false;
+        } else {
+            allReady = true;
+        }
     }
 }
