@@ -25,5 +25,5 @@ public class SelectUser {
         listOfJoinedUsers.add(firstIndex);
     }
 
-    // FUCK DIG DANIEL
+    // undskyld daniel :(
 }

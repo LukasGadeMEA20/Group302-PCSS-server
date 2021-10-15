@@ -4,7 +4,7 @@ public class Lobby {
     ServerUser[] listOfServerUsers;
     ServerUser cardAdmin;
     float time;
-    Prompt promt;
+    ServerPrompt promt;
     boolean allReady;
     int winPoint;
 

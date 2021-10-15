@@ -49,19 +49,24 @@ public class Main {
                                 while (gameRunning) {
                                     // Change to running the cardCzarFlow for first user in the player queue
                                     // then a for loop for the other players. Much better and does not require using the user number counter.
-                                    if (thisUserNumber == 0) { // change to take the first user in the queue
-                                        // run the cardCzars perspective.
-                                        game.cardCzarFlow(connectToClient, currentUser.getIpName() + " thread", currentUser, prompt);
-                                    } else {
-                                        // run the other players' perspective.
-                                        game.otherPlayersFlow(connectToClient, currentUser.getIpName() + " thread", currentUser, prompt);
+                                    for(int i = 0; i < playerQueue.getSize(); i++) {
+                                        ServerUser tempUser = (ServerUser) playerQueue.get(i); // Have to have this temporary stand in to cast to server uwuser.
+                                        if (i == 0) { // change to take the first user in the queue
+                                            // run the cardCzars perspective.
+                                            game.cardCzarFlow(connectToClient, tempUser.getIpName() + " thread", tempUser, prompt);
+                                        } else {
+                                            // run the other players' perspective.
+                                            game.otherPlayersFlow(connectToClient, tempUser.getIpName() + " thread", tempUser, prompt);
+                                        }
                                     }
 
                                     // Check if the round is still going
                                     boolean roundRunning = true;
                                     while(roundRunning) {
                                         if (game.nextRound()) {
-                                            // switch around queue.
+                                            ServerUser tempUser = (ServerUser) playerQueue.getFirst();
+                                            playerQueue.dequeue();
+                                            playerQueue.queue(tempUser);
                                         } else if (game.gameFinished()) {
                                             // go to end screen.
                                             state = 2;

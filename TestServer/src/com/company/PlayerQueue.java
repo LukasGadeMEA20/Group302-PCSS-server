@@ -16,6 +16,10 @@ public class PlayerQueue<E> extends LinkedList {
         return super.getFirst();
     }
 
+    public Object get(int _i){
+        return super.get(_i);
+    }
+
     @Override
     public String toString() {
         return super.toString();

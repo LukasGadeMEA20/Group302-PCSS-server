@@ -7,14 +7,69 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class Prompt {
-    String[] answer;
+public class ServerPrompt {
 
     //String containing the random selected prompt
     String randomPrompt;
 
     //ArrayList containing all the prompts from the promptsFile
     ArrayList<String> prompts = new ArrayList<>();
+
+    String prompt = "";
+    ArrayList<UserAnswer> userAnswers = new ArrayList<UserAnswer>();
+    boolean allReady = false;
+    int numberOfUsers = 0;
+
+    ServerPrompt(){
+        prompt = generatePrompt();
+    }
+    ServerPrompt(String _prompt){
+        prompt = _prompt;
+    }
+
+    public String getPrompt(){
+        return prompt;
+    }
+
+    public void setPrompt(String _prompt){
+        prompt = _prompt;
+    }
+
+    public void setNumberOfUsers(int _users){
+        numberOfUsers = _users;
+    }
+
+    public void addUserAnswer(UserAnswer _userAnswer){
+        userAnswers.add(_userAnswer);
+    }
+
+    public UserAnswer getUserAnswerAtPoint(int i){
+        return userAnswers.get(i);
+    }
+
+    public ArrayList<UserAnswer> getUserAnswers(){
+        return userAnswers;
+    }
+
+    public String generatePrompt(){
+        return "pis";
+    }
+
+    public boolean getAllReady(){
+        return allReady;
+    }
+
+    public void setAllReady(boolean _rdy){
+        allReady = _rdy;
+    }
+
+    public void checkAllReady(){
+        if(numberOfUsers > userAnswers.size()){
+            allReady = false;
+        } else {
+            allReady = true;
+        }
+    }
 
     //Function that reads a file and adds its contents to an ArrayList
     public void readFile(){
