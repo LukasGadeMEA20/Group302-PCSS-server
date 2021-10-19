@@ -23,9 +23,6 @@ public class ServerPrompt {
     ServerPrompt(){
         prompt = generatePrompt();
     }
-    ServerPrompt(String _prompt){
-        prompt = _prompt;
-    }
 
     public String getPrompt(){
         return prompt;

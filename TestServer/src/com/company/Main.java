@@ -37,6 +37,8 @@ public class Main {
                     playerQueue.queue(currentUser);
 
                     // Check if the lobby is still running.
+                    // Change this part to make the user instead run a thread, so we are able to handle more users.
+                    // I'm just an idiot LUL
                     boolean lobbyRunning = true;
                     while(lobbyRunning) {
                         switch (state) {
