@@ -15,6 +15,10 @@ public class UserAnswer {
         return userAnswer;
     }
 
+    public ServerUser getUser(){
+        return user;
+    }
+
     public void setReady(boolean _r){
         ready = _r;
     }

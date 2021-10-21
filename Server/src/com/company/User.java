@@ -37,6 +37,10 @@ public class User {
         this.points = points;
     }
 
+    public void delegatePoint(){
+        points++;
+    }
+
     public int getPoints() { //gets the points of a user
         return this.points;
     }

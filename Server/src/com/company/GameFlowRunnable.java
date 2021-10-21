@@ -15,10 +15,10 @@ public class GameFlowRunnable implements Runnable {
 
     ServerUser user;
 
-    static ServerPrompt prompt = new ServerPrompt();
     static int state = 1;
     static PlayerQueue<ServerUser> joinedUsers = new PlayerQueue<>();
     static int clientNo;
+    static ServerPrompt prompt = new ServerPrompt(joinedUsers.getSize());
 
     GameFlowRunnable(Socket _connectToClient, String _name, String _userID, int _thisUserNumber){
         connectToClient = _connectToClient;
@@ -55,7 +55,7 @@ public class GameFlowRunnable implements Runnable {
     @Override
     public void run() {
 
-        //ServerUser tempUser = (ServerUser) joinedUsers.get(thisUserNumber); // Have to have this temporary stand in to cast to server uwuser.
+        // ServerUser tempUser = (ServerUser) joinedUsers.get(thisUserNumber); // Have to have this temporary stand in to cast to server uwuser.
 
         // Check if the lobby is still running.
         System.out.println(name+ " 1");
@@ -81,6 +81,8 @@ public class GameFlowRunnable implements Runnable {
 
     public void gameFlow(){
         prompt.setNumberOfUsers(clientNo);
+        prompt.readFile();
+        prompt.choosePrompt();
         // Check if the game is still going.
         boolean gameRunning = true;
         while (gameRunning) {
@@ -94,7 +96,7 @@ public class GameFlowRunnable implements Runnable {
                     cardCzarFlow();
                 } else {
                     // run the other players' perspective.
-                    writePromptFlow();
+                    writeToPromptFlow();
                 }
             }
 
@@ -127,7 +129,21 @@ public class GameFlowRunnable implements Runnable {
             DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
 
             while(connected){
-                toClient.writeUTF(prompt.getPrompt() + " cardCzar");
+                toClient.writeInt(2);
+                toClient.writeUTF("Please wait while the other users write an answer for the prompt: "+prompt.getPrompt());
+
+                while(!prompt.getAllReady()){
+                    prompt.checkAllReady();
+                    Thread.sleep(2000);
+                }
+
+                String userAnswersString = "Please choose the answer which you find the funniest!";
+                for(int i = 0; i<prompt.getUserAnswers().size();i++){
+                    userAnswersString += "\n\t"+i + " - for the answer " + prompt.getUserAnswerAtPoint(i);
+                }
+                toClient.writeUTF(userAnswersString);
+                int cardCzarChoice = fromClient.readInt();
+                prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
                 /*prompt.checkAllReady();
                 if(prompt.getAllReady()) {
                     toClient.writeUTF("Please choose the prompt you like the most:");
@@ -156,10 +172,12 @@ public class GameFlowRunnable implements Runnable {
             }
         } catch (IOException e/*| InterruptedException e*/) {
             e.printStackTrace();
+        } catch( InterruptedException e){
+            e.printStackTrace();
         }
     }
 
-    public void writePromptFlow(){
+    public void writeToPromptFlow(){
         try{
             System.out.println("Connected to a client at " + new Date() + '\n');
             boolean connected = true;
@@ -167,10 +185,16 @@ public class GameFlowRunnable implements Runnable {
             DataInputStream fromClient = new DataInputStream(connectToClient.getInputStream());
             DataOutputStream toClient = new DataOutputStream(connectToClient.getOutputStream());
 
-            DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
+            //DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
 
+            
             while(connected){
-                toClient.writeUTF(prompt.getPrompt() + " player");
+                toClient.writeInt(3);
+                toClient.writeUTF(prompt.getPrompt());
+                String userAnswer = fromClient.readUTF();
+                prompt.addUserAnswer(new UserAnswer(user, userAnswer, true));
+                System.out.println(prompt.getUserAnswerAtPoint(0));
+
                 /*toClient.writeBoolean(true);
                 String userAnswer = fromClient.readUTF();
                 prompt.addUserAnswer(new UserAnswer(user, userAnswer, true));

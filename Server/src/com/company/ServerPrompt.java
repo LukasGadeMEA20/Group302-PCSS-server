@@ -20,8 +20,9 @@ public class ServerPrompt {
     boolean allReady = false;
     int numberOfUsers = 0;
 
-    ServerPrompt(){
+    ServerPrompt(int _numberOfUsers){
         prompt = generatePrompt();
+        numberOfUsers = _numberOfUsers;
     }
 
     public String getPrompt(){
@@ -61,18 +62,23 @@ public class ServerPrompt {
     }
 
     public void checkAllReady(){
+        try{
+            System.out.println(numberOfUsers); System.out.println(userAnswers.size());
         if(numberOfUsers > userAnswers.size()){
             allReady = false;
         } else {
             allReady = true;
+            System.out.println("POG");
+        }}catch (NullPointerException e){
+            //e.printStackTrace();
         }
     }
 
     //Function that reads a file and adds its contents to an ArrayList
     public void readFile(){
         //Created a scanner that reads the promptsFile.txt file
-        try (Scanner scanner = new Scanner(new File("promptsFile.txt"))){
-
+        try {
+            Scanner scanner = new Scanner(new File("promptsFile.txt"));
             while (scanner.hasNextLine()){
                 prompts.add(scanner.nextLine());
             }
@@ -86,15 +92,12 @@ public class ServerPrompt {
 
     //Choose a random prompt from the ArrayList
     public void choosePrompt() {
-        //Creating a random
+        // Creating a random
         Random random = new Random();
 
-        //Gets the size of the ArrayList
+        // Gets a random integer based on the size of the prompts and sets it as the prompt.
         int randomNum = random.nextInt(prompts.size());
-        randomPrompt = prompts.get(randomNum);
-
-        //Print a value from the ArrayList
-        System.out.println(randomPrompt);
+        prompt = prompts.get(randomNum);
     }
 
 }

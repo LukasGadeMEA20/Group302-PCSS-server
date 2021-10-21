@@ -2,6 +2,7 @@ package com.company;
 
 public class ServerUser {
     String userName = "";
+    int points= 0;
     int userID = 0;
     String ipName = "";
 
@@ -17,6 +18,18 @@ public class ServerUser {
     }
     public String getUserName(){
         return userName;
+    }
+
+    public void setPoints(int points) { //sets the points of a user
+        this.points = points;
+    }
+
+    public void delegatePoint(){
+        points++;
+    }
+
+    public int getPoints() { //gets the points of a user
+        return this.points;
     }
 
     public void setUserName(String _userName){
