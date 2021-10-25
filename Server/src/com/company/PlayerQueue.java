@@ -1,10 +1,9 @@
 package com.company;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
-public class PlayerQueue<E> extends LinkedList {
+public class PlayerQueue<E> extends LinkedList<Object> {
     public void queue(E e){
         add(e);
     }
@@ -47,5 +46,17 @@ public class PlayerQueue<E> extends LinkedList {
 
         //Adds the element back, so it is last
         this.queue((E) firstIndex);
+    }
+
+    public ServerUser getUsersPosition(ServerUser user){
+        ServerUser tempUser = null;
+        for(int i = 0; i <getSize();i++){
+            tempUser = (ServerUser) get(i);
+            if(user.getIpName().equals(tempUser.getIpName())){
+                tempUser = user;
+                break;
+            }
+        }
+        return tempUser;
     }
 }

@@ -15,12 +15,18 @@ public class GameFlowRunnable implements Runnable {
 
     ServerUser user;
 
-    static int state = 1;
+    static int state = 0;
     static PlayerQueue<ServerUser> joinedUsers = new PlayerQueue<>();
     static int clientNo;
     static ServerPrompt prompt = new ServerPrompt(joinedUsers.getSize());
+    static boolean acceptingUsers = true;
 
-    GameFlowRunnable(Socket _connectToClient, String _name, String _userID, int _thisUserNumber){
+    boolean connected = true;
+
+    DataInputStream fromClient;
+    DataOutputStream toClient;
+
+    GameFlowRunnable(Socket _connectToClient, String _name, String _userID, int _thisUserNumber) {
         connectToClient = _connectToClient;
         name = _name;
         userID = _userID;
@@ -72,11 +78,50 @@ public class GameFlowRunnable implements Runnable {
                     // End of the game
                     break;
             }
+            System.out.println(state);
         }
     }
 
-    public void lobbyFlow(){
-        // Do so the users can connect here.
+    public void lobbyFlow() {
+        System.out.println("Connected to a client at " + new Date() + '\n');
+        try{
+            fromClient = new DataInputStream(connectToClient.getInputStream());
+            toClient = new DataOutputStream(connectToClient.getOutputStream());
+
+            // Do so the users can connect here.
+            if(clientNo > 8){
+                acceptingUsers = false;
+            } else {
+                if(joinedUsers.getUsersPosition(user).getUserID() == 0){
+                    firstPlayer();
+                } else {
+                    otherPlayers();
+                }
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void firstPlayer(){
+        try {
+            toClient.writeInt(0);
+            int confirm = fromClient.readInt();
+            if (confirm == 0){
+                state=1;
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void otherPlayers(){
+        try {
+            toClient.writeInt(1);
+            Thread.sleep(1000);
+        } catch(IOException | InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
     public void gameFlow(){
@@ -86,9 +131,16 @@ public class GameFlowRunnable implements Runnable {
         // Check if the game is still going.
         boolean gameRunning = true;
         while (gameRunning) {
+            System.out.println("YEP WORKS" + "TUN "+ thisUserNumber + " tempUser " + user.getUserID());
+            if(joinedUsers.getUsersPosition(user).getUserID() == 0){
+                cardCzarFlow();
+            } else {
+                writeToPromptFlow();
+            }
+
             // Change to running the cardCzarFlow for first user in the player queue
             // then a for loop for the other players. Much better and does not require using the user number counter.
-            for(int i = 0; i < joinedUsers.getSize(); i++) {
+            /*for(int i = 0; i < joinedUsers.getSize(); i++) {
                 ServerUser tempUser = (ServerUser) joinedUsers.get(i); // Have to have this temporary stand in to cast to server uwuser.
                 System.out.println("TUN "+ thisUserNumber + " tempUser " + tempUser.getUserID());
                 if (thisUserNumber == tempUser.getUserID()) { // change to take the first user in the queue
@@ -98,7 +150,7 @@ public class GameFlowRunnable implements Runnable {
                     // run the other players' perspective.
                     writeToPromptFlow();
                 }
-            }
+            }*/
 
             // Check if the round is still going
             boolean roundRunning = true;
@@ -120,13 +172,8 @@ public class GameFlowRunnable implements Runnable {
         prompt.readFile();
         prompt.choosePrompt();
         try{
-            System.out.println("Connected to a client at " + new Date() + '\n');
-            boolean connected = true;
 
-            DataInputStream fromClient = new DataInputStream(connectToClient.getInputStream());
-            DataOutputStream toClient = new DataOutputStream(connectToClient.getOutputStream());
-
-            DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
+            //DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
 
             while(connected){
                 toClient.writeInt(2);
