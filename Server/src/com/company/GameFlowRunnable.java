@@ -64,7 +64,6 @@ public class GameFlowRunnable implements Runnable {
         // ServerUser tempUser = (ServerUser) joinedUsers.get(thisUserNumber); // Have to have this temporary stand in to cast to server uwuser.
 
         // Check if the lobby is still running.
-        System.out.println(name+ " 1");
         boolean lobbyRunning = true;
         while(lobbyRunning) {
             switch (state) {
@@ -78,7 +77,6 @@ public class GameFlowRunnable implements Runnable {
                     // End of the game
                     break;
             }
-            System.out.println(state);
         }
     }
 
@@ -107,7 +105,10 @@ public class GameFlowRunnable implements Runnable {
         try {
             toClient.writeInt(0);
             int confirm = fromClient.readInt();
-            if (confirm == 0){
+            if (confirm == 0) {
+                prompt.setNumberOfUsers(clientNo);
+                prompt.readFile();
+                prompt.choosePrompt();
                 state=1;
             }
         } catch(IOException e){
@@ -118,6 +119,7 @@ public class GameFlowRunnable implements Runnable {
     public void otherPlayers(){
         try {
             toClient.writeInt(1);
+            System.out.println(clientNo);
             Thread.sleep(1000);
         } catch(IOException | InterruptedException e){
             e.printStackTrace();
@@ -125,32 +127,15 @@ public class GameFlowRunnable implements Runnable {
     }
 
     public void gameFlow(){
-        prompt.setNumberOfUsers(clientNo);
-        prompt.readFile();
-        prompt.choosePrompt();
         // Check if the game is still going.
         boolean gameRunning = true;
         while (gameRunning) {
-            System.out.println("YEP WORKS" + "TUN "+ thisUserNumber + " tempUser " + user.getUserID());
+            System.out.println("User number "+ thisUserNumber + " user ID " + user.getUserID());
             if(joinedUsers.getUsersPosition(user).getUserID() == 0){
                 cardCzarFlow();
             } else {
                 writeToPromptFlow();
             }
-
-            // Change to running the cardCzarFlow for first user in the player queue
-            // then a for loop for the other players. Much better and does not require using the user number counter.
-            /*for(int i = 0; i < joinedUsers.getSize(); i++) {
-                ServerUser tempUser = (ServerUser) joinedUsers.get(i); // Have to have this temporary stand in to cast to server uwuser.
-                System.out.println("TUN "+ thisUserNumber + " tempUser " + tempUser.getUserID());
-                if (thisUserNumber == tempUser.getUserID()) { // change to take the first user in the queue
-                    // run the cardCzars perspective.
-                    cardCzarFlow();
-                } else {
-                    // run the other players' perspective.
-                    writeToPromptFlow();
-                }
-            }*/
 
             // Check if the round is still going
             boolean roundRunning = true;
@@ -253,3 +238,18 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 }
+
+
+// Change to running the cardCzarFlow for first user in the player queue
+// then a for loop for the other players. Much better and does not require using the user number counter.
+            /*for(int i = 0; i < joinedUsers.getSize(); i++) {
+                ServerUser tempUser = (ServerUser) joinedUsers.get(i); // Have to have this temporary stand in to cast to server uwuser.
+                System.out.println("TUN "+ thisUserNumber + " tempUser " + tempUser.getUserID());
+                if (thisUserNumber == tempUser.getUserID()) { // change to take the first user in the queue
+                    // run the cardCzars perspective.
+                    cardCzarFlow();
+                } else {
+                    // run the other players' perspective.
+                    writeToPromptFlow();
+                }
+            }*/

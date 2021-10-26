@@ -14,7 +14,7 @@ public class Main {
         new Thread( () ->{
             try{
                 ServerSocket serverSocket = new ServerSocket(port);
-                System.out.println("Server with ip " + InetAddress.getLocalHost() + port  + "started at " + new Date() + '\n');
+                System.out.println("Server with ip " + InetAddress.getLocalHost() + " " + port  + "started at " + new Date() + '\n');
 
                 //Read the promptsFile.txt file and runs the readFile function
                 GameFlow game = new GameFlow();
