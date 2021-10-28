@@ -20,6 +20,9 @@ public class GameFlowRunnable implements Runnable {
     static ServerPrompt prompt = new ServerPrompt(joinedUsers.getSize());
     static boolean acceptingUsers = true;
 
+    static int winRequirement = 5;
+    static ServerUser winnerUser;
+
     boolean connected = true;
 
     DataInputStream fromClient;
@@ -38,7 +41,18 @@ public class GameFlowRunnable implements Runnable {
     }
 
     public boolean nextRound(){
-        return true;
+        boolean nextRound = true;
+
+        for(int i = 0; i < joinedUsers.getSize(); i++){
+            ServerUser tempUser = (ServerUser) joinedUsers.get(i);
+            if(tempUser.getPoints() >= winRequirement){
+                nextRound = false;
+                winnerUser = tempUser;
+                break;
+            }
+        }
+
+        return nextRound;
     }
 
     public boolean gameFinished(){
@@ -61,7 +75,8 @@ public class GameFlowRunnable implements Runnable {
                     gameFlow();
                     break;
                 case 2:
-                    // End of the game
+                    endOfGame();
+                    lobbyRunning = false;
                     break;
             }
         }
@@ -121,37 +136,25 @@ public class GameFlowRunnable implements Runnable {
             System.out.println("User number "+ thisUserNumber + " user ID " + user.getUserID());
             if(joinedUsers.getUsersPosition(user).getUserID() == 0){
                 cardCzarFlow();
-            } else {
-                writeToPromptFlow();
-            }
 
-            // Check if the round is still going
-            boolean roundRunning = true;
-            while(roundRunning) {
+                cardCzarWinnerChoice();//DELEGATE POINTS
+
                 if (nextRound()) {
-                    cardCzarWinnerChoice();//DELEGATE POINTS
                     joinedUsers.switchToLast();
                 } else if (gameFinished()) {
                     // go to end screen.
                     state = 2;
                     gameRunning = false;
                 }
+            } else {
+                writeToPromptFlow();
             }
+
+
         }
     }
 
-    public void cardCzarWinnerChoice(){
-        try {
-            System.out.println("KØRER CARDCZAR WINNER CHOICE");
-            int cardCzarChoice = fromClient.readInt();
-            System.out.println("FIK INT FRA SERVER OMEGAEZ");
-            prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
-            System.out.println("CARDZAR WINNER WON: "+prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().getPoints()+" POINTS");
-        }catch (IOException e/*| InterruptedException e*/) {
-            e.printStackTrace();
-        }
 
-    }
     public void cardCzarFlow(){
         try{
 
@@ -206,6 +209,19 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
+    public void cardCzarWinnerChoice(){
+        try {
+            System.out.println("KØRER CARDCZAR WINNER CHOICE");
+            int cardCzarChoice = fromClient.readInt();
+            System.out.println("FIK INT FRA SERVER");
+            prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
+            System.out.println("CARDZAR WINNER WON: "+prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().getPoints()+" POINTS");
+        }catch (IOException e/*| InterruptedException e*/) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void writeToPromptFlow(){
         try{
             System.out.println("Connected to a client at " + new Date() + '\n');
@@ -236,6 +252,17 @@ public class GameFlowRunnable implements Runnable {
                 System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());*/
             //}
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void endOfGame(){
+        try{
+            toClient.writeInt(4);
+            toClient.writeUTF(winnerUser.getUserName() + " is the winner!");
+            Thread.sleep(5000);
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
