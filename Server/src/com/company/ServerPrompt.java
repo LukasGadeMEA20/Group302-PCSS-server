@@ -97,6 +97,7 @@ public class ServerPrompt {
         // Gets a random integer based on the size of the prompts and sets it as the prompt.
         int randomNum = random.nextInt(prompts.size());
         prompt = prompts.get(randomNum);
+        prompts.remove(randomNum);
     }
 
 }
