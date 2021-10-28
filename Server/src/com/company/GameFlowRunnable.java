@@ -129,9 +129,8 @@ public class GameFlowRunnable implements Runnable {
             boolean roundRunning = true;
             while(roundRunning) {
                 if (nextRound()) {
+                    cardCzarWinnerChoice();//DELEGATE POINTS
                     joinedUsers.switchToLast();
-
-                    // Delegate point to winner here (?)
                 } else if (gameFinished()) {
                     // go to end screen.
                     state = 2;
@@ -141,6 +140,18 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
+    public void cardCzarWinnerChoice(){
+        try {
+            System.out.println("KØRER CARDCZAR WINNER CHOICE");
+            int cardCzarChoice = fromClient.readInt();
+            System.out.println("FIK INT FRA SERVER OMEGAEZ");
+            prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
+            System.out.println("CARDZAR WINNER WON: "+prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().getPoints()+" POINTS");
+        }catch (IOException e/*| InterruptedException e*/) {
+            e.printStackTrace();
+        }
+
+    }
     public void cardCzarFlow(){
         try{
 
@@ -161,8 +172,6 @@ public class GameFlowRunnable implements Runnable {
                 }
 
                 toClient.writeUTF(userAnswersString);
-                int cardCzarChoice = fromClient.readInt();
-                prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
 
                 /*prompt.checkAllReady();
                 if(prompt.getAllReady()) {
