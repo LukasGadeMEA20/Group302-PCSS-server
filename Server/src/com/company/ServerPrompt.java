@@ -60,7 +60,7 @@ public class ServerPrompt {
 
     public void checkAllReady(){
         try{
-            //System.out.println(numberOfUsers); System.out.println(userAnswers.size());
+            System.out.print(numberOfUsers + " "); System.out.println(userAnswers.size());
             if(numberOfUsers > userAnswers.size()){
                 allReady = false;
                 System.out.println("Not Pog");

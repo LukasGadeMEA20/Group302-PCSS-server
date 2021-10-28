@@ -257,7 +257,7 @@ public class GameFlowRunnable implements Runnable {
     }
 
     public void endOfGame(){
-        try{
+        try {
             toClient.writeInt(4);
             toClient.writeUTF(winnerUser.getUserName() + " is the winner!");
             Thread.sleep(5000);
