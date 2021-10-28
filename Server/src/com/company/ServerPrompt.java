@@ -9,9 +9,6 @@ import java.util.Scanner;
 
 public class ServerPrompt {
 
-    //String containing the random selected prompt
-    String randomPrompt;
-
     //ArrayList containing all the prompts from the promptsFile
     ArrayList<String> prompts = new ArrayList<>();
 
@@ -63,14 +60,16 @@ public class ServerPrompt {
 
     public void checkAllReady(){
         try{
-            System.out.println(numberOfUsers); System.out.println(userAnswers.size());
-        if(numberOfUsers > userAnswers.size()){
-            allReady = false;
-        } else {
-            allReady = true;
-            System.out.println("POG");
-        }}catch (NullPointerException e){
-            //e.printStackTrace();
+            //System.out.println(numberOfUsers); System.out.println(userAnswers.size());
+            if(numberOfUsers > userAnswers.size()){
+                allReady = false;
+                System.out.println("Not Pog");
+            } else {
+                allReady = true;
+                System.out.println("POG");
+            }
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 

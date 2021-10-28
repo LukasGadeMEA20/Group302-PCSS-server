@@ -14,10 +14,7 @@ public class Main {
         new Thread( () ->{
             try{
                 ServerSocket serverSocket = new ServerSocket(port);
-                System.out.println("Server with ip " + InetAddress.getLocalHost() + port  + "started at " + new Date() + '\n');
-
-                //Read the promptsFile.txt file and runs the readFile function
-                GameFlow game = new GameFlow();
+                System.out.println("Server with ip " + InetAddress.getLocalHost() + " " + port  + "started at " + new Date() + '\n');
 
                 int clientNo = 0;
 
@@ -39,8 +36,6 @@ public class Main {
                     /*DataInputStream fromFile = new DataInputStream(new FileInputStream(inetAddress.getHostAddress()+".txt"));
                     //listOfUsers.add(new ServerUser(fromFile.readUTF()));
                     System.out.println(thisUserNumber);*/
-
-
                 }
             } catch (IOException e){
                 System.err.println(e);
