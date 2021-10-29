@@ -46,17 +46,18 @@ public class PlayerQueue<E> extends LinkedList<Object> {
 
         //Adds the element back, so it is last
         this.queue((E) firstIndex);
+
     }
 
-    public ServerUser getUsersPosition(ServerUser user){
-        ServerUser tempUser = null;
+    public int getUsersPosition(ServerUser user){
+        int intToReturn = 0;
         for(int i = 0; i <getSize();i++){
-            tempUser = (ServerUser) get(i);
+            ServerUser tempUser = (ServerUser) get(i);
             if(user.getIpName().equals(tempUser.getIpName())){
-                tempUser = user;
+                intToReturn=i;
                 break;
             }
         }
-        return tempUser;
+        return intToReturn;
     }
 }
