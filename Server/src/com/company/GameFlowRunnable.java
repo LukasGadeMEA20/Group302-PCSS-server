@@ -23,7 +23,7 @@ public class GameFlowRunnable implements Runnable {
     static boolean roundRunning = true;
     static boolean gameRunning = true;
 
-    static int winRequirement = 1;
+    static int winRequirement = 5;
     static ServerUser winnerUser;
 
     boolean connected = true;
