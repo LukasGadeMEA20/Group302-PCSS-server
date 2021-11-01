@@ -81,6 +81,15 @@ public class GameFlowRunnable implements Runnable {
 
         System.out.println("Connected to a client at " + new Date() + '\n');
         // ServerUser tempUser = (ServerUser) joinedUsers.get(thisUserNumber); // Have to have this temporary stand in to cast to server uwuser.
+        try {
+            fromClient = new DataInputStream(connectToClient.getInputStream());
+            toClient = new DataOutputStream(connectToClient.getOutputStream());
+
+            String userName = fromClient.readUTF();
+            user.setUserName(userName);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
 
         // Check if the lobby is still running.
         boolean lobbyRunning = true;
@@ -102,23 +111,15 @@ public class GameFlowRunnable implements Runnable {
     }
 
     public void lobbyFlow() {
-        System.out.println("Connected to a client at " + new Date() + '\n');
-        try {
-            fromClient = new DataInputStream(connectToClient.getInputStream());
-            toClient = new DataOutputStream(connectToClient.getOutputStream());
-
-            // Do so the users can connect here.
-            if (clientNo > 8) {
-                acceptingUsers = false;
+        // Do so the users can connect here.
+        if (clientNo > 8) {
+            acceptingUsers = false;
+        } else {
+            if (joinedUsers.getUsersPosition(user) == 0) {
+                firstPlayer();
             } else {
-                if (joinedUsers.getUsersPosition(user) == 0) {
-                    firstPlayer();
-                } else {
-                    otherPlayers();
-                }
+                otherPlayers();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -127,11 +128,16 @@ public class GameFlowRunnable implements Runnable {
             toClient.writeInt(0);
             int confirm = fromClient.readInt();
             if (confirm == 0) {
-
                 prompt.setNumberOfUsers(clientNo);
                 prompt.readFile();
                 prompt.choosePrompt();
                 state = 1;
+            } else if (confirm == 1){
+                toClient.writeInt(clientNo);
+                for(int i = 0; i < clientNo; i++){
+                    ServerUser tempUser = (ServerUser) joinedUsers.get(i);
+                    toClient.writeUTF(tempUser.getUserName());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -141,7 +147,11 @@ public class GameFlowRunnable implements Runnable {
     public void otherPlayers() {
         try {
             toClient.writeInt(1);
-            System.out.println(joinedUsers.toString());
+            toClient.writeInt(clientNo);
+            for(int i = 0; i < clientNo; i++){
+                ServerUser tempUser = (ServerUser) joinedUsers.get(i);
+                toClient.writeUTF(tempUser.getUserName());
+            }
             Thread.sleep(3000);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -194,7 +204,7 @@ public class GameFlowRunnable implements Runnable {
 
             //while(connected){
             toClient.writeInt(2);
-            toClient.writeUTF("Please wait while the other users write an answer for the prompt: \n" + prompt.getPrompt());
+            toClient.writeUTF(prompt.getPrompt());
 
             while (!prompt.getAllReady()) {
                 prompt.checkAllReady();
