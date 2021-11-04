@@ -32,6 +32,7 @@ public class GameFlowRunnable implements Runnable {
     DataOutputStream toClient;
 
     GameFlowRunnable(Socket _connectToClient, String _name, String _userID, int _thisUserNumber) {
+        // Information it gets from the user once it is connected
         connectToClient = _connectToClient;
         name = _name;
         userID = _userID;
@@ -92,17 +93,31 @@ public class GameFlowRunnable implements Runnable {
         }
 
         // Check if the lobby is still running.
+        boolean testCase1 = false;
+        boolean testCase2 = false;
+        boolean testCase3 = false;
         boolean lobbyRunning = true;
         while (lobbyRunning) {
             switch (state) {
                 case 0:
+                    if(!testCase1){
+                        System.out.println(name + " 1");
+                        testCase1 = true;
+                    }
                     lobbyFlow();
                     break;
                 case 1:
+                    if(!testCase2){
+                        System.out.println(name + " 2");
+                        testCase2 = true;
+                    }
                     gameFlow();
                     break;
                 case 2:
-                    System.out.println("Case 2");
+                    if(!testCase3){
+                        System.out.println(name + " 3");
+                        testCase3 = true;
+                    }
                     endOfGame();
                     lobbyRunning = false;
                     break;
@@ -190,9 +205,7 @@ public class GameFlowRunnable implements Runnable {
     public void resetRound() {
         prompt.clearUserAnswers();
         prompt.choosePrompt();
-        System.out.println("Before " + joinedUsers.toString());
         joinedUsers.switchToLast();
-        System.out.println("Before " + joinedUsers.toString());
         prompt.setAllReady(false);
         roundRunning = false;
     }
@@ -207,16 +220,20 @@ public class GameFlowRunnable implements Runnable {
             toClient.writeUTF(prompt.getPrompt());
 
             while (!prompt.getAllReady()) {
+                toClient.writeBoolean(false);
                 prompt.checkAllReady();
                 Thread.sleep(2000);
             }
+            toClient.writeBoolean(true);
 
+            toClient.writeInt(prompt.getUserAnswers().size());
             String userAnswersString = "Please choose the answer which you find the funniest!";
             for (int i = 0; i < prompt.getUserAnswers().size(); i++) {
-                userAnswersString += "\n\t" + i + " - for the answer " + prompt.getUserAnswerAtPoint(i).getUserAnswer();
+                toClient.writeUTF(prompt.getUserAnswerAtPoint(i).getUserAnswer());
+                //userAnswersString += "\n\t" + i + " - for the answer " + prompt.getUserAnswerAtPoint(i).getUserAnswer();
             }
 
-            toClient.writeUTF(userAnswersString);
+            //toClient.writeUTF(userAnswersString);
             cardCzarWinnerChoice();
         } catch (IOException e) {
             e.printStackTrace();
@@ -231,9 +248,12 @@ public class GameFlowRunnable implements Runnable {
             if (cardCzarChoice > 0) {
                 cardCzarChoice--;
                 choiceMade = true;
+                prompt.setWinner(cardCzarChoice);
+                toClient.writeUTF(prompt.getWinner());
                 prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
+                Thread.sleep(2000);
             }
-        } catch (IOException e/*| InterruptedException e*/) {
+        } catch (IOException | InterruptedException e/*| InterruptedException e*/) {
             e.printStackTrace();
         }
 
@@ -241,36 +261,24 @@ public class GameFlowRunnable implements Runnable {
 
     public void writeToPromptFlow() {
         try {
-
             DataInputStream fromClient = new DataInputStream(connectToClient.getInputStream());
             DataOutputStream toClient = new DataOutputStream(connectToClient.getOutputStream());
 
-            //DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
-
-
-            //int i = 0;
-            //while(connected){
             toClient.writeInt(3);
             toClient.writeUTF(prompt.getPrompt());
             String userAnswer = fromClient.readUTF();
 
             if (!userAnswer.equals("")) {
                 prompt.addUserAnswer(new UserAnswer(user, userAnswer, true));
-                System.out.println("HI" + prompt.getUserAnswerAtPoint(0));
                 while (roundRunning) {
                     Thread.sleep(2000);
                 }
-                System.out.println(state);
+                toClient.writeUTF(prompt.getWinner());
             }
             Thread.sleep(1500);
 
 
-                /*toClient.writeBoolean(true);
-                String userAnswer = fromClient.readUTF();
-                prompt.addUserAnswer(new UserAnswer(user, userAnswer, true));
-                toClient.writeUTF(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());
-                System.out.println(prompt.getUserAnswerAtPoint(user.getUserID()).getUserAnswer());*/
-            //}
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

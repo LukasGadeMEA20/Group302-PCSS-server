@@ -14,6 +14,7 @@ public class ServerPrompt {
 
     String prompt = "";
     ArrayList<UserAnswer> userAnswers = new ArrayList<UserAnswer>();
+    String winningAnswer;
     boolean allReady = false;
     int numberOfUsers = 0;
 
@@ -60,6 +61,14 @@ public class ServerPrompt {
 
     public void clearUserAnswers(){
         userAnswers = new ArrayList<UserAnswer>();
+    }
+
+    public void setWinner(int i){
+        winningAnswer = getUserAnswerAtPoint(i).getUserAnswer();
+    }
+
+    public String getWinner(){
+        return winningAnswer;
     }
 
     public void checkAllReady(){
