@@ -5,7 +5,7 @@ This is the server side for the game, which is required to be installed and runn
 
 The server contains multi-threadding and networking on a basic level and a lot of classes and functions that makes it able to .
 
-The client side of the game can be found here: https://github.com/LukasGadeMEA20/Group302-PCSS-client
+The client-side of the game can be found here: https://github.com/LukasGadeMEA20/Group302-PCSS-client
 
 # How to install and use
 Step 1: Download this GitHub repository as a ZIP-file under the Code tab.
