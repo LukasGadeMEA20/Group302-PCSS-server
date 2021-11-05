@@ -13,6 +13,6 @@ Find the IPv4 Adress and copy the numbers beside it.
 Example: IPv4 Address. . . . . . . . . . . : ```123.45.678.90```
 
 
-Step 3: Download the repository as a ZIP-file and run the ___.jar file and run it.
+Step 3: Download the repository as a ZIP-file, locate the ```___.jar``` file and run it.
 
 Step 4.
