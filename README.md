@@ -11,9 +11,9 @@ Step 1: Before using the server on your computer, you must know what your IP-adr
 Step 2: Write ```ipconfig``` and press in the command prompt and press ENTER.
 Find the IPv4 Adress and copy the adress beside it.
 
-Example: ```IPv4 Address. . . . . . . . . . . : 123.45.678.90```
+Example: IPv4 Address. . . . . . . . . . . : ```123.45.678.90```
 
 
-Step 3: Download the repository as a ZIP-file and run the ___.jar file and run it.
+Step 3: Download the repository as a ZIP-file, locate the ___.jar file and run it.
 
 Step 4.
