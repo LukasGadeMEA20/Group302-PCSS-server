@@ -13,30 +13,40 @@ public class Main {
 
         new Thread( () ->{
             try{
+                // Starts the server and prints the information of the server.
                 ServerSocket serverSocket = new ServerSocket(port);
-                System.out.println("Server with ip " + InetAddress.getLocalHost() + " " + port  + "started at " + new Date() + '\n');
+                System.out.println("Yakboks Server\nIP: " + InetAddress.getLocalHost().getHostAddress() + "\nPort: " + port  + "\nStarted at " + new Date() + '\n');
 
+                // A counter for how many clients have joined
                 int clientNo = 0;
+                // A limit to the amount of clients that have joined
+                // - this is special for our game, but can be changed in the while loop to true
+                // - we just wanted a limit to how many people could join the game, as too many players can be chaotic.
+                int maxClients = 7;
 
-                while(true) {
+                // While loop which connects users to the server and starts a thread for that user.
+                while(clientNo < maxClients) {
+                    // Gets the users socket
                     Socket connectToClient = serverSocket.accept();
+                    // Gives the user a number and counts the global client number up. This is used for identification in the list
                     int thisUserNumber = clientNo;
                     clientNo++;
 
+                    // Prints to the server command prompt that a user joined the server.
                     System.out.println("Starting thread for client " + clientNo + " at " + new Date()+'\n');
                     InetAddress inetAddress = connectToClient.getInetAddress();
                     System.out.println("Client " + clientNo + "'s host name is " + inetAddress.getHostName() + '\n');
                     System.out.println("Client " + clientNo + "'s host address is " + inetAddress.getHostAddress() + '\n');
 
+                    // Starts the thread for the user and starts it
                     new Thread(
                             new GameFlowRunnable(connectToClient, inetAddress.getHostName() + " thread", inetAddress.getHostName(), thisUserNumber)
                     ).start();
 
-                    Thread.sleep(2000);
-                    /*DataInputStream fromFile = new DataInputStream(new FileInputStream(inetAddress.getHostAddress()+".txt"));
-                    //listOfUsers.add(new ServerUser(fromFile.readUTF()));
-                    System.out.println(thisUserNumber);*/
+                    // Waits half a second before it begins connecting a new user
+                    Thread.sleep(500);
                 }
+            // Catches exceptions and prints it.
             } catch (IOException e){
                 System.err.println(e);
             } catch(InterruptedException e){

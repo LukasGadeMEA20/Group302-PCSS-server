@@ -7,19 +7,20 @@ import java.net.Socket;
 import java.util.Date;
 
 public class GameFlowRunnable implements Runnable {
+    // Identification it gets from the main thread
     Socket connectToClient = null;
     String name = "";
     String userID;
     int thisUserNumber;
 
+
     ServerUser user;
-    boolean choiceMade;
+    static boolean choiceMade;
 
     static int state = 0;
     static PlayerQueue<ServerUser> joinedUsers = new PlayerQueue<>();
     static int clientNo;
     static ServerPrompt prompt = new ServerPrompt(joinedUsers.getSize());
-    static boolean acceptingUsers = true;
     static boolean roundRunning = true;
     static boolean gameRunning = true;
 
@@ -93,31 +94,16 @@ public class GameFlowRunnable implements Runnable {
         }
 
         // Check if the lobby is still running.
-        boolean testCase1 = false;
-        boolean testCase2 = false;
-        boolean testCase3 = false;
         boolean lobbyRunning = true;
         while (lobbyRunning) {
             switch (state) {
                 case 0:
-                    if(!testCase1){
-                        System.out.println(name + " 1");
-                        testCase1 = true;
-                    }
                     lobbyFlow();
                     break;
                 case 1:
-                    if(!testCase2){
-                        System.out.println(name + " 2");
-                        testCase2 = true;
-                    }
                     gameFlow();
                     break;
                 case 2:
-                    if(!testCase3){
-                        System.out.println(name + " 3");
-                        testCase3 = true;
-                    }
                     endOfGame();
                     lobbyRunning = false;
                     break;
@@ -127,14 +113,10 @@ public class GameFlowRunnable implements Runnable {
 
     public void lobbyFlow() {
         // Do so the users can connect here.
-        if (clientNo > 8) {
-            acceptingUsers = false;
+        if (joinedUsers.getUsersPosition(user) == 0) {
+            firstPlayer();
         } else {
-            if (joinedUsers.getUsersPosition(user) == 0) {
-                firstPlayer();
-            } else {
-                otherPlayers();
-            }
+            otherPlayers();
         }
     }
 
@@ -147,6 +129,13 @@ public class GameFlowRunnable implements Runnable {
                 prompt.readFile();
                 prompt.choosePrompt();
                 state = 1;
+                // Testing purposes
+                if(clientNo==1){
+                    prompt.addUserAnswer(new UserAnswer(user, "testResponse1",true));
+                    prompt.addUserAnswer(new UserAnswer(user, "testResponse2",true));
+                    prompt.addUserAnswer(new UserAnswer(user, "testResponse3",true));
+                    prompt.addUserAnswer(new UserAnswer(user, "testResponse4",true));
+                }
             } else if (confirm == 1){
                 toClient.writeInt(clientNo);
                 for(int i = 0; i < clientNo; i++){
@@ -167,7 +156,7 @@ public class GameFlowRunnable implements Runnable {
                 ServerUser tempUser = (ServerUser) joinedUsers.get(i);
                 toClient.writeUTF(tempUser.getUserName());
             }
-            Thread.sleep(3000);
+            Thread.sleep(500);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -185,7 +174,7 @@ public class GameFlowRunnable implements Runnable {
                     System.out.println("test");
                     resetRound();
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(500);
                     } catch(InterruptedException e){}
                     roundRunning = true;
                 }
@@ -222,7 +211,7 @@ public class GameFlowRunnable implements Runnable {
             while (!prompt.getAllReady()) {
                 toClient.writeBoolean(false);
                 prompt.checkAllReady();
-                Thread.sleep(2000);
+                Thread.sleep(500);
             }
             toClient.writeBoolean(true);
 
@@ -234,7 +223,7 @@ public class GameFlowRunnable implements Runnable {
             }
 
             //toClient.writeUTF(userAnswersString);
-            cardCzarWinnerChoice();
+            cardCzarWinnerChoice(fromClient.readInt());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -242,16 +231,15 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
-    public void cardCzarWinnerChoice() {
+    public void cardCzarWinnerChoice(int choice) {
         try {
-            int cardCzarChoice = fromClient.readInt();
-            if (cardCzarChoice > 0) {
-                cardCzarChoice--;
+            int cardCzarChoice = choice;
+            if (cardCzarChoice > -1) {
                 choiceMade = true;
                 prompt.setWinner(cardCzarChoice);
                 toClient.writeUTF(prompt.getWinner());
                 prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
-                Thread.sleep(2000);
+                Thread.sleep(500);
             }
         } catch (IOException | InterruptedException e/*| InterruptedException e*/) {
             e.printStackTrace();
@@ -271,11 +259,11 @@ public class GameFlowRunnable implements Runnable {
             if (!userAnswer.equals("")) {
                 prompt.addUserAnswer(new UserAnswer(user, userAnswer, true));
                 while (roundRunning) {
-                    Thread.sleep(2000);
+                    Thread.sleep(500);
                 }
                 toClient.writeUTF(prompt.getWinner());
             }
-            Thread.sleep(1500);
+            Thread.sleep(500);
 
 
 
