@@ -16,3 +16,5 @@ Step 3: When the server is running, it will print a line of text, which includes
 Example: Server IP: ```123.45.678.90``` Port: ```8000```
 
 Step 4: Write down the IP-address and port. These are used for the clients to connect to the server and join the game.
+
+Step 5: Play the game! To join the server, go to the [client-side GitHub page](https://github.com/LukasGadeMEA20/Group302-PCSS-client) and follow the instructions there.
