@@ -39,19 +39,25 @@ public class GameFlowRunnable implements Runnable {
         userID = _userID;
         thisUserNumber = _thisUserNumber;
 
+        // Uses the information from the connected user and creates a user object
         user = new ServerUser(connectToClient.getInetAddress().getHostName(), _thisUserNumber, _userID);
         joinedUsers.queue(user);
 
+        // Adds 1 to the number of clients
         clientNo++;
     }
 
+    //Checks if the game should go to the next round, stop or wait for the card czar
     public boolean nextRound() {
+        // Goes to next round
         boolean nextRound = true;
 
+        // Unless the card czar has NOT made a choice, it will not go to the next round
         if (!choiceMade) {
             return false;
         }
 
+        // Checks if any of the users has the right amount of points to win. ...
         for (int i = 0; i < joinedUsers.getSize(); i++) {
             ServerUser tempUser = (ServerUser) joinedUsers.get(i);
             if (tempUser.getPoints() >= winRequirement) {
@@ -64,6 +70,7 @@ public class GameFlowRunnable implements Runnable {
         return nextRound;
     }
 
+    //
     public boolean gameFinished() {
         boolean gameFinished = false;
         for (int i = 0; i < joinedUsers.getSize(); i++) {
