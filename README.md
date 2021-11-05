@@ -7,7 +7,7 @@ The server contains multi-threadding and networking on a basic level and a lot o
 
 The client-side of the game can be found here: https://github.com/LukasGadeMEA20/Group302-PCSS-client
 
-The client side is developed by August V. Clarkfeldt, Bjørn Troldahl, Christopher Reimers, Daniel S. Rossing, Lukas G. Ravnsborg, Mikkel S. Lauridsen
+The server side is developed by August V. Clarkfeldt, Bjørn Troldahl, Christopher Reimers, Daniel S. Rossing, Lukas G. Ravnsborg, Mikkel S. Lauridsen
 
 # How to install and use
 Step 1: Download this GitHub repository as a ZIP-file under the Code tab.
