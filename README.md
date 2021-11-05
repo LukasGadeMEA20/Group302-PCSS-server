@@ -9,7 +9,7 @@ The client side of the game can be found here: https://github.com/LukasGadeMEA20
 Step 1: Before using the server on your computer, you must know what your IP-adress is. To find your adress, start by searching for ```cmd``` in the Start menu and run it.
 
 Step 2: Write ```ipconfig``` and press in the command prompt and press ENTER.
-Find the IPv4 Adress and copy the adress beside it.\ 
+Find the IPv4 Adress and copy the adress beside it.   
 Example: ```IPv4 Address. . . . . . . . . . . : 123.45.678.90```
 
 
