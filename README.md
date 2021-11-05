@@ -11,13 +11,17 @@ The client-side of the game can be found here: https://github.com/LukasGadeMEA20
 The server side is developed by August V. Clarkfeldt, Bjørn Troldahl, Christopher Reimers, Daniel S. Rossing, Lukas G. Ravnsborg, Mikkel S. Lauridsen
 
 ### How to install and use
-Step 1: Download this GitHub repository as a ZIP-file under the Code tab.
+Step 1: Install [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=windows) and follow the install instructions.
 
-Step 2: Open the ZIP-file, locate ```___.jar``` and run it.
+Step 2: Download this GitHub repository as a ZIP-file under the Code tab and unzip it into a folder.
 
-Step 3: When the server is running, it will print a line of text, which includes the IP-address, the port and what time it started running.  
+Step 3: In IntelliJ IDEA, press File > Open... and locate the folder and click OK.
+
+Step 4: Locate ```YakboksApplication``` under src > java > com.example.yakboksdemo > ... and run it.
+
+Step 5: When the server is running, it will print a line of text in the console which includes the IP-address, the port and what time it started running.  
 Example: Server IP: ```123.45.678.90``` Port: ```8000```
 
-Step 4: Write down the IP-address and port. These are used for the clients to connect to the server and join the game.
+Step 6: Write down the IP-address and port. These are used for the clients to connect to the server and join the game.
 
-Step 5: Play the game! To join the server, go to the [client-side GitHub page](https://github.com/LukasGadeMEA20/Group302-PCSS-client) and follow the instructions there.
+Step 7: Play the game! To join the server, go to the [client-side GitHub page](https://github.com/LukasGadeMEA20/Group302-PCSS-client) and follow the instructions there.
