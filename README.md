@@ -4,7 +4,7 @@ Welcome to Yakboks! the game! In this game, you need to come up with the funnies
 ### Introduction
 This is the server side for the game, which is required to be installed and running in order to make for the game to work. When the server is running, players/clients are able to join it and then play the game. The server will be running on the PC in the background with a given IP-address that the players connect to.
 
-The server contains multi-threadding and networking on a basic level and a lot of classes and functions that makes it able to .
+The server contains multi-threadding and networking on a basic level and a lot of classes and functions that makes it able to establish connections. The communication protocol is TCP, as the program requires an established connection between server and client in order to transmit data. 
 
 The client-side of the game can be found here: https://github.com/LukasGadeMEA20/Group302-PCSS-client
 
