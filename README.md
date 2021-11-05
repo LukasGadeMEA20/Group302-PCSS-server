@@ -13,6 +13,6 @@ Step 1: Download this GitHub repository as a ZIP-file under the Code tab.
 Step 2: Open the ZIP-file, locate ```___.jar``` and run it.
 
 Step 3: When the server is running, it will print a line of text, which includes the IP-address, the port and what time it started running.  
-Example: Server IP: ```123.45.678.90```    Port: ```8000```
+Example: Server IP: ```123.45.678.90``` Port: ```8000```
 
 Step 4: Write down the IP-address and port. These are used for the clients to connect to the server and join the game.
