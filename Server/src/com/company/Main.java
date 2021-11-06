@@ -14,6 +14,7 @@ public class Main {
         new Thread( () ->{
             try{
                 // Starts the server and prints the information of the server.
+                // By using sockets our connection is TCP, in the sense that it is connection-oriented.
                 ServerSocket serverSocket = new ServerSocket(port);
                 System.out.println("Yakboks Server\nIP: " + InetAddress.getLocalHost().getHostAddress() + "\nPort: " + port  + "\nStarted at " + new Date() + '\n');
 
