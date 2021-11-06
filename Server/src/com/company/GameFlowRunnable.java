@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Date;
 
 public class GameFlowRunnable implements Runnable {
@@ -100,6 +99,9 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
+    // - Lobby flow - //
+
+    // code for what the server does in the first state (state=0)
     public void lobbyFlow() {
         // Checks whether they are the first player or not.
         // This is done so the first player is the one who can initialize and start the game, while the others just wait.
@@ -148,10 +150,16 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
+    // For the other players that joined the lobby, they do not see much.
+    // The only thing the server has to do for the users, is update the list of users in the lobby.
     public void otherPlayers() {
         try {
-            toClient.writeInt(1);
+            toClient.writeInt(1); // tells the client which state it has to be in
+
+            // The code below could be made into a separate method as the code does the same two places.
+            // Write the size of the users connected.
             toClient.writeInt(clientNo);
+            // Write the username of each user who are connected to the server.
             for (int i = 0; i < clientNo; i++) {
                 ServerUser tempUser = (ServerUser) joinedUsers.get(i);
                 toClient.writeUTF(tempUser.getUserName());
@@ -162,30 +170,40 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
+    // - Game flow - //
+
+    // Code that runs the gameplay loop when the state is set to 1.
     public void gameFlow() {
         // Check if the game is still going.
         while (gameRunning) {
-            System.out.println("User number " + thisUserNumber + " user ID " + user.getUserName());
-            if (joinedUsers.getUsersPosition(user) == 0) {
-                cardCzarFlow();
+            //System.out.println("User number " + thisUserNumber + " user ID " + user.getUserName());
 
-                System.out.println("HELLO");
+            // Checks if the user is the first in the list, meaning they are the cardCzar
+            if (joinedUsers.getUsersPosition(user) == 0) {
+                cardCzarFlow(); // Starts the flow of the cardCzar
+
+                // After it has run the cardCzar flow, it will check whether it should go to the next round, or if it should end the game.
                 if (nextRound()) {
-                    System.out.println("test");
-                    resetRound();
+                    resetRound(); // If it goes to the next round, it runs the reset round method to clear the data.
+
+                    // We experienced some weird stuff between the client and the server, but adding the sleep for half a second made it run much smoother.
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                     }
+                    // retells the program that the round is still running. Used to halt the other users until the cardCzar makes a choice.
                     roundRunning = true;
                 }
 
+                // Else if the game is finished, this part of the code will run.
                 if (gameFinished()) {
                     // go to end screen.
                     state = 2;
+                    // Set any boolean running a while loop to stop.
                     roundRunning = false;
                     gameRunning = false;
                 }
+            // If the User is not the first in the list, they will be writing to the prompt through this flow of code.
             } else {
                 writeToPromptFlow();
             }
@@ -239,38 +257,44 @@ public class GameFlowRunnable implements Runnable {
         return gameFinished;
     }
 
+    // Code for resetting the round.
     public void resetRound() {
+        // Clears all the user answers
         prompt.clearUserAnswers();
+        // Chooses a new prompt
         prompt.choosePrompt();
+        // Swaps around the first user to back of the list, for a new card czar.
         joinedUsers.switchToLast();
+        // Tells the program that not all are ready.
         prompt.setAllReady(false);
+        // Sets the round running to be false, to make the users continue in their flow
         roundRunning = false;
     }
 
+    // Flow of the card czar - the one who picks whose answer they find the best.
     public void cardCzarFlow() {
         try {
-
-            //DataOutputStream toFile = new DataOutputStream(new FileOutputStream(user.getIpName()+".txt"));
-
-            //while(connected){
+            // Tells the client which state it is in, and what the prompt is.
             toClient.writeInt(2);
             toClient.writeUTF(prompt.getPrompt());
 
+            // A while loop that waits till every user has written in an answer.
             while (!prompt.getAllReady()) {
-                toClient.writeBoolean(false);
-                prompt.checkAllReady();
-                Thread.sleep(500);
+                toClient.writeBoolean(false);    // Writes to the client that it is not ready yet
+                prompt.checkAllReady();            // Checks if all are ready
+                Thread.sleep(500);           // Waits a bit for checking again
             }
+            // Writes to the client that it is ready.
             toClient.writeBoolean(true);
 
+            // Sends the size of the amount of user answers
             toClient.writeInt(prompt.getUserAnswers().size());
-            String userAnswersString = "Please choose the answer which you find the funniest!";
+            // Sends all the user answers.
             for (int i = 0; i < prompt.getUserAnswers().size(); i++) {
                 toClient.writeUTF(prompt.getUserAnswerAtPoint(i).getUserAnswer());
-                //userAnswersString += "\n\t" + i + " - for the answer " + prompt.getUserAnswerAtPoint(i).getUserAnswer();
             }
 
-            //toClient.writeUTF(userAnswersString);
+            // Run the method that makes the server decide who won by using the choice from the client.
             cardCzarWinnerChoice(fromClient.readInt());
         } catch (IOException e) {
             e.printStackTrace();
@@ -279,39 +303,49 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
-    public void cardCzarWinnerChoice(int choice) {
+    // Code that delegates the point for who won.
+    public void cardCzarWinnerChoice(int cardCzarChoice) {
         try {
-            int cardCzarChoice = choice;
+            // A little checker that is used to check if the choice is valid or not.
+            // Was mostly used for debugging and it should never not be -1 or anything below
             if (cardCzarChoice > -1) {
-                choiceMade = true;
-                prompt.setWinner(cardCzarChoice);
-                toClient.writeUTF(prompt.getWinner());
-                prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint();
+                choiceMade = true; // tells the program that a choice has been made
+                prompt.setWinner(cardCzarChoice); // Sets the winner of the prompt
+                prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().delegatePoint(); // delegates the point to the user
+                // writes back to the client who the winner is and how many points they have.
+                toClient.writeUTF(prompt.getWinner() + "\n(Points = "+prompt.getUserAnswerAtPoint(cardCzarChoice).getUser().getPoints()+")");
                 Thread.sleep(500);
             }
-        } catch (IOException | InterruptedException e/*| InterruptedException e*/) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
     }
 
+    // the flow for the other users who are writing in an answer to the prompt.
     public void writeToPromptFlow() {
         try {
-            DataInputStream fromClient = new DataInputStream(connectToClient.getInputStream());
-            DataOutputStream toClient = new DataOutputStream(connectToClient.getOutputStream());
+            /*DataInputStream fromClient = new DataInputStream(connectToClient.getInputStream());
+            DataOutputStream toClient = new DataOutputStream(connectToClient.getOutputStream());*/
 
+            // Writes the state to the server and the prompt.
             toClient.writeInt(3);
             toClient.writeUTF(prompt.getPrompt());
+            // Awaits the answer from the user
             String userAnswer = fromClient.readUTF();
 
+            // Makes sure they did not send in a blank answer
             if (!userAnswer.equals("")) {
+                // adds their answer to the prompts list of answers
                 prompt.addUserAnswer(new UserAnswer(user, userAnswer, true));
+                // Waits until the card czar has made a choice.
                 while (roundRunning) {
                     Thread.sleep(500);
                 }
+                // Writes the winner once it is finished with waiting for the card czar.
                 toClient.writeUTF(prompt.getWinner());
             }
-            Thread.sleep(500);
+            Thread.sleep(500); // Sleeps the program
 
 
         } catch (IOException e) {
@@ -321,29 +355,16 @@ public class GameFlowRunnable implements Runnable {
         }
     }
 
+    // End of the game state
     public void endOfGame() {
         try {
+            // tells the client which state it is
             toClient.writeInt(4);
+            // writes who to the client who the winner is, which is the last thing the server will do before ending the game.
             toClient.writeUTF(winnerUser.getUserName() + " is the winner!");
             Thread.sleep(5000);
-
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 }
-
-
-// Change to running the cardCzarFlow for first user in the player queue
-// then a for loop for the other players. Much better and does not require using the user number counter.
-            /*for(int i = 0; i < joinedUsers.getSize(); i++) {
-                ServerUser tempUser = (ServerUser) joinedUsers.get(i); // Have to have this temporary stand in to cast to server uwuser.
-                System.out.println("TUN "+ thisUserNumber + " tempUser " + tempUser.getUserID());
-                if (thisUserNumber == tempUser.getUserID()) { // change to take the first user in the queue
-                    // run the cardCzars perspective.
-                    cardCzarFlow();
-                } else {
-                    // run the other players' perspective.
-                    writeToPromptFlow();
-                }
-            }*/
