@@ -17,7 +17,7 @@ Step 2: Download this GitHub repository as a ZIP-file under the Code tab and unz
 
 Step 3: In IntelliJ IDEA, press File > Open... and locate the folder and click OK.
 
-Step 4: Locate ```YakboksApplication``` under src > java > com.example.yakboksdemo > ... and run it.
+Step 4: Locate ```Main``` under src > com.company > ... and run it.
 
 Step 5: When the server is running, it will print a line of text in the console which includes the IP-address, the port and what time it started running.  
 Example: Server IP: ```123.45.678.90``` Port: ```8000```
