@@ -12,11 +12,18 @@ public class ServerPrompt {
     //ArrayList containing all the prompts from the promptsFile
     ArrayList<String> prompts = new ArrayList<>();
 
+    // What the current prompt is
     String prompt = "";
+    
+    // Attributes for controlling how many users and how many answers
     ArrayList<UserAnswer> userAnswers = new ArrayList<UserAnswer>();
-    String winningAnswer;
-    boolean allReady = false;
     int numberOfUsers = 0;
+    
+    // The answer that won
+    String winningAnswer;
+    
+    // Boolean for checking if everyone has written an answer
+    boolean allReady = false;
 
     ServerPrompt(int _numberOfUsers){
         prompt = generatePrompt();
@@ -39,6 +46,7 @@ public class ServerPrompt {
         userAnswers.add(_userAnswer);
     }
 
+    // Getting a specific user answer at an index
     public UserAnswer getUserAnswerAtPoint(int i){
         return userAnswers.get(i);
     }
@@ -55,6 +63,7 @@ public class ServerPrompt {
         allReady = _rdy;
     }
 
+    // Clears the list of user answers. Used when resetting the game.
     public void clearUserAnswers(){
         userAnswers = new ArrayList<UserAnswer>();
     }
@@ -67,15 +76,15 @@ public class ServerPrompt {
         return winningAnswer;
     }
 
+    // Method for checking if every player has written an answer in
     public void checkAllReady(){
-        try{
-            System.out.print(numberOfUsers + " "); System.out.println(userAnswers.size());
+        try{ // We make sure we do not go out of bounds and use a try-catch for null pointer exception.
+            // then we check if the list of user answers is smaller than the number of users
+            // Minus one, as one of the players is the card czar.
             if(numberOfUsers-1 > userAnswers.size()){
                 allReady = false;
-                System.out.println("Not Pog");
             } else {
                 allReady = true;
-                System.out.println("POG");
             }
         }catch (NullPointerException e){
             e.printStackTrace();
@@ -86,13 +95,16 @@ public class ServerPrompt {
     public void readFile(){
         //Created a scanner that reads the promptsFile.txt file
         try {
+            // Scanner attribute which is based on a file instead of "System.in"
             Scanner scanner = new Scanner(new File("promptsFile.txt"));
+            // Reads every line and adds it to the prompts attribute
             while (scanner.hasNextLine()){
                 prompts.add(scanner.nextLine());
             }
+            // Close the scanner to not cause data leaks.
             scanner.close();
 
-            } catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e) { // If it could not find the file, we catch it and write it to the server.
                 e.printStackTrace();
                 System.out.println("Couldn't find file");
             }
