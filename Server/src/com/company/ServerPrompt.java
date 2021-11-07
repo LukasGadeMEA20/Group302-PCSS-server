@@ -47,10 +47,6 @@ public class ServerPrompt {
         return userAnswers;
     }
 
-    public String generatePrompt(){
-        return "pis";
-    }
-
     public boolean getAllReady(){
         return allReady;
     }
