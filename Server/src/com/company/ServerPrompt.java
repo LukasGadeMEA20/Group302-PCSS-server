@@ -30,6 +30,7 @@ public class ServerPrompt {
         numberOfUsers = _numberOfUsers;
     }
 
+    // - Getters and setters - //
     public String getPrompt(){
         return prompt;
     }
@@ -46,11 +47,6 @@ public class ServerPrompt {
         userAnswers.add(_userAnswer);
     }
 
-    // Getting a specific user answer at an index
-    public UserAnswer getUserAnswerAtPoint(int i){
-        return userAnswers.get(i);
-    }
-
     public ArrayList<UserAnswer> getUserAnswers(){
         return userAnswers;
     }
@@ -62,18 +58,23 @@ public class ServerPrompt {
     public void setAllReady(boolean _rdy){
         allReady = _rdy;
     }
-
-    // Clears the list of user answers. Used when resetting the game.
-    public void clearUserAnswers(){
-        userAnswers = new ArrayList<UserAnswer>();
-    }
-
+    
     public void setWinner(int i){
         winningAnswer = getUserAnswerAtPoint(i).getUserAnswer();
     }
 
     public String getWinner(){
         return winningAnswer;
+    }
+
+    // Clears the list of user answers. Used when resetting the game.
+    public void clearUserAnswers(){
+        userAnswers = new ArrayList<UserAnswer>();
+    }
+    
+    // Getting a specific user answer at an index
+    public UserAnswer getUserAnswerAtPoint(int i){
+        return userAnswers.get(i);
     }
 
     // Method for checking if every player has written an answer in
