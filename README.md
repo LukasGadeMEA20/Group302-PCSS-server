@@ -25,3 +25,6 @@ Example: Server IP: ```123.45.678.90``` Port: ```8000```
 Step 6: Write down the IP-address and port. These are used for the clients to connect to the server and join the game.
 
 Step 7: Play the game! To join the server, go to the [client-side GitHub page](https://github.com/LukasGadeMEA20/Group302-PCSS-client) and follow the instructions there.
+
+### Future work - for both Client and Server
+The program could really use a lot of code clean up and some optimization different places. The server also does not handle a user exiting the program while connected to the server very well, and will tank your computer quite a lot if you do so, so I would recommend not doing that. If you were to do close the program while connected to the server, you will have to close and open the server. We tried finding out where that problem could be solved, but the only solution we could come up with, was creating a try-catch around every to/fromClient, with it catching the exception "SocketException". We did not know if that was the way to go, which it probably was, but that could be a good spot to start looking at.
